@@ -6,7 +6,7 @@ COPY . $GOPATH/src/coronabot
 
 WORKDIR $GOPATH/src/coronabot
 
-RUN go get golang.org/x/text
+RUN go get
 RUN go build
 
 ENTRYPOINT $GOPATH/src/coronabot/coronabot

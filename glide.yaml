@@ -1,4 +1,0 @@
-package: corona_bot
-import:
-- package: gopkg.in/tucnak/telebot.v2
-- package: golang.org/x/text/unicode/norm

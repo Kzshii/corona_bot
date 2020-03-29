@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func getGlobal() Country {
+func getData() Country {
 	data := Country{}
-	resp, err := http.Get(covidURL)
+	resp, err := http.Get("https://www.bing.com/covid/data?IG=1")
 	if err != nil {
 		fmt.Println("Error", err)
 	}

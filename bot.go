@@ -14,20 +14,7 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-const token = ""
-const covidURL = "https://www.bing.com/covid/data?IG=1"
-
-func initBot() {
-	b, err := tb.NewBot(tb.Settings{
-		Token:  token,
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
+func initBot(b *tb.Bot) {
 	location, err := time.LoadLocation("America/Sao_Paulo")
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +22,7 @@ func initBot() {
 	}
 
 	b.Handle("/global", func(m *tb.Message) {
-		data := getGlobal()
+		data := getData()
 
 		fmt.Println(m.Sender.Username)
 		t, _ := time.Parse(time.RFC3339, data.LastUpdated)
@@ -50,7 +37,7 @@ func initBot() {
 	b.Handle("/list", func(m *tb.Message) {
 		var list []string
 		var buffer bytes.Buffer
-		data := getGlobal()
+		data := getData()
 
 		fmt.Println(m.Sender.Username)
 
@@ -71,11 +58,16 @@ func initBot() {
 	})
 
 	b.Handle(tb.OnText, func(m *tb.Message) {
+		if m.Text[0:9] == "/teixeira" {
+			b.Send(m.Chat, "caraio, sdds de mainha, sdds de painho, sdds acarajé, sdds fumar um hollywood, sdds vitorinha")
+			return
+		}
+
 		if m.Text[0:7] == "/search" {
 			b.Send(m.Chat, "Procurando....")
 			fmt.Println(m.Sender.Username, m.Payload)
 
-			data := getGlobal()
+			data := getData()
 			t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
 
 			for _, c := range data.Areas {
@@ -93,7 +85,7 @@ func initBot() {
 					return
 				}
 			}
-			b.Send(m.Chat, "Não encontrado")
+			b.Send(m.Chat, "Nenhum resultado encontrado")
 		}
 	})
 
